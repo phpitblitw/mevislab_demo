@@ -1,0 +1,38 @@
+// write your script here!
+// If you cannot see those Chinese comments, use vscode to open this file.
+// reopen with encoding -> UTF-8
+Interface {
+  //本模块的输入，一般用不到
+  Inputs {}  
+  //本模块的输出，一般用不到
+  Outputs {}  
+  //本模块涉及的变量。凡是在GUI中出现的变量，且需要在python文件中读写的，都需要在此声明
+  Parameters {
+    Field itkFilePath {type=String}  //声明存储itk文件的路径名，并声明为String类型
+  }
+}
+
+//用户操作触发命令，在此处声明，在python脚本中实现
+Commands {
+  source = $(LOCAL)/itkReader.py  //$(LOCAL)为宏，表示该itkReader.script文件 所在的路径。本行指定了使用的python文件名
+  FieldListener {  //定义一个监听器，listenField的变量发生变化，就会触发python脚本中command对应的函数的执行
+    listenField = itkFilePath  
+    command = SetSrcFilePath  //python函数 实现于上述python文件中
+  }
+}
+
+//GUI界面
+Window {
+  Splitter {  //界面分割
+    direction = horizontal  //指定该分隔符 分割方向为水平方向
+    Vertical {  //垂直布局
+      Viewer View2D.self {}  //绘图展示的窗口，使用Viewer声明。 本mlab中 使用View2D模块来展示。输入View2D后，使用自动补全的View2D.self 作为展示窗口
+      Viewer View3D.self {}  //绘图展示的窗口，使用Viewer声明。 本mlab中 使用View3D模块来展示。输入View3D后，使用自动补全的View3D.self 作为展示窗口
+    }
+    Field itkFilePath {  //在GUI中显示这个itkFilePath变量
+      browseButton = True  //设置browseButton，从而提供一个按钮，用来设置路径
+      browseMode = open  //设置文件查看方式为“打开”。所有备选项 可以在mevislab提供的MDL文档中查询到
+    }
+  }
+}
+
